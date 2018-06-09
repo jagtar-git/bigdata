@@ -1,0 +1,6 @@
+# command for putting a file , first go to the local directory
+and then
+
+git add .
+git commit -m "MESSAGE"
+git push origin master

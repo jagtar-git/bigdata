@@ -1,0 +1,23 @@
+create database
+create database mynewdb location '/dta/mynewdb';
+show databases;
+
+
+to create table
+create table mynewdb.t1(c1 int);
+
+to insert data
+insert into table mynewdb.t1 values(1);
+
+select data
+select * from mynewdb.t1
+
+describe the details
+describe formatted mynewdb.t1
+
+change the location
+alter table mynewdb.t1 set location '/t2/';
+
+
+
+alter table mynewdb.t1 set location '/data/mynewdb/t1';

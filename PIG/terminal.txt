@@ -1,0 +1,18 @@
+To Create Database
+create database mynewdb location '/data/mynewdb';
+
+TO CAREATE TABLE
+create table mynewdb.t1 (c1 int);
+
+INSERT DATA
+insert into table mynewdb.t1 values (1);
+
+SELECT DATA
+select * from mynewdb.t1;
+
+DESCRIBE THE DETAILS
+describe formatted mynewdb.t1;
+
+CHANGE THE LOCATION
+alter table mynewdb.t1 set location '/t2/';
+

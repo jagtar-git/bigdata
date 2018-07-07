@@ -1,0 +1,127 @@
+hive> create database hiveexercise location '/data/hiveexercise'; 
+OK
+Time taken: 0.358 seconds
+
+hive> use hiveexercise;
+OK
+Time taken: 0.023 seconds
+hive> show tables;
+OK
+Time taken: 0.201 seconds
+hive> create table t1 (id int, name string);
+OK
+Time taken: 0.133 seconds
+hive> 
+
+hive> describe formatted t1;
+OK
+# col_name            	data_type           	comment             
+	 	 
+id                  	int                 	                    
+name                	string              	                    
+	 	 
+# Detailed Table Information	 	 
+Database:           	hiveexercise        	 
+Owner:              	cloudera            	 
+CreateTime:         	Sat Jul 07 07:35:30 PDT 2018	 
+LastAccessTime:     	UNKNOWN             	 
+Protect Mode:       	None                	 
+Retention:          	0                   	 
+Location:           	hdfs://quickstart.cloudera:8020/data/hiveexercise/t1	 
+Table Type:         	MANAGED_TABLE       	 
+Table Parameters:	 	 
+	transient_lastDdlTime	1530974130          
+	 	 
+# Storage Information	 	 
+SerDe Library:      	org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe	 
+InputFormat:        	org.apache.hadoop.mapred.TextInputFormat	 
+OutputFormat:       	org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat	 
+Compressed:         	No                  	 
+Num Buckets:        	-1                  	 
+Bucket Columns:     	[]                  	 
+Sort Columns:       	[]                  	 
+Storage Desc Params:	 	 
+	serialization.format	1                   
+Time taken: 0.088 seconds, Fetched: 27 row(s)
+
+
+hive> insert into t1 values (1, 'JAC');
+
+
+hive> select * from t1;
+OK
+1	JAC
+
+Time taken: 0.062 seconds, Fetched: 1 row(s)
+
+
+[cloudera@quickstart ~]$ hadoop fs -ls /data/hiveexercise/t1
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup          6 2018-07-07 07:36 /data/hiveexercise/t1/000000_0
+
+[cloudera@quickstart ~]$ hadoop fs -cat /data/hiveexercise/t1/000000_0
+1JAC
+[cloudera@quickstart ~]$ 
+
+
+hive> CREATE TABLE t2 (id int, name STRING) ROW FORMAT delimited fields terminated by ',';
+OK
+Time taken: 0.085 seconds
+
+
+hive> insert into t2 values (1,'JAC');
+
+[cloudera@quickstart ~]$ hadoop fs -ls /data/hiveexercise/t2
+Found 1 items
+-rwxrwxrwx   1 cloudera supergroup          6 2018-07-07 07:41 /data/hiveexercise/t2/000000_0
+
+[cloudera@quickstart ~]$ hadoop fs -cat /data/hiveexercise/t2/000000_0
+1,JAC
+
+hive> alter table t1 set SERDEPROPERTIES ('field.delim'=',');
+OK
+Time taken: 0.115 seconds
+
+hive> insert into t1 values (2, 'COmma record JAC');
+
+[cloudera@quickstart ~]$ hadoop fs -cat /data/hiveexercise/t1/*
+1JAC
+2,COmma record JAC
+
+[cloudera@quickstart ~]$ hadoop fs -rm /data/hiveexercise/t1/000000_0_copy_1
+
+[cloudera@quickstart ~]$ hadoop fs -mv /data/hiveexercise/t1/* /data/hiveexercise/t3/
+
+[cloudera@quickstart ~]$ hadoop fs -cat /data/hiveexercise/t1/*
+1,JAC
+
+[cloudera@quickstart ~]$ hadoop fs -cat /data/hiveexercise/t3/*
+1JAC
+
+hive> alter table t1 set location '/data/hiveexercise/t2';
+OK
+Time taken: 0.097 seconds
+
+hive> create external table t1 (id int)  location '/data/hiveexercise/t2';
+OK
+Time taken: 0.038 seconds
+hive> select * from t1;
+OK
+1
+Time taken: 0.045 seconds, Fetched: 1 row(s)
+hive> drop table t1;
+OK
+Time taken: 0.085 seconds
+hive> select * from t2;
+OK
+1
+Time taken: 0.04 seconds, Fetched: 1 row(s)
+
+hive> insert overwrite table rating select id, case when userid=1 AND rating=4 then 2 else userid end, rating from rating; 
+
+hive> insert overwrite table rating select id, userid, case userid  when 2 then 5 else rating end from rating; 
+
+	===========OR===============
+insert overwrite table rating select id, userid, case  when userid=2 then 5 else rating end from rating; 
+
+

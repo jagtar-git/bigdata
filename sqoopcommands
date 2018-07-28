@@ -1,0 +1,6 @@
+
+sqoop export --connect jdbc:mysql://localhost:3306/retail_db --username retail_dba --password cloudera --table movies --fields-terminated-by ',' --export-dir /data/hiveexercise/movies/
+
+
+sqoop import --connect jdbc:mysql://localhost:3306/retail_db --username retail_dba -P --table movies --m 1 --target-dir /sqoopimport/
+ 
